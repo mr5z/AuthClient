@@ -1,8 +1,7 @@
-﻿namespace AuthClient.Services.Identity
+﻿namespace AuthClient.Services.Identity;
+
+public enum ChallengeMethod
 {
-    public enum ChallengeMethod
-    {
-        S256,
-        Plain
-    }
+    S256,
+    Plain
 }

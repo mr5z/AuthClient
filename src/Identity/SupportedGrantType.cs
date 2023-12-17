@@ -1,8 +1,7 @@
-﻿namespace AuthClient.Services.Identity
+﻿namespace AuthClient.Services.Identity;
+
+public enum SupportedGrantType
 {
-    public enum SupportedGrantType
-    {
-        AuthorizationCode,
-        Password
-    }
+    AuthorizationCode,
+    Password
 }

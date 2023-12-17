@@ -7,31 +7,25 @@ using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AuthClient.Services.Identity
+namespace AuthClient.Services.Identity;
+
+public class CrossIdentityClient(HttpClient httpClient) : IIdentityClient
 {
-    public class CrossIdentityClient : IIdentityClient
+    private readonly HttpClient httpClient = httpClient;
+
+    public virtual Task<AuthorizationResponse> Authorize(AuthorizationRequest request)
     {
-        private readonly HttpClient httpClient;
+        throw new NotImplementedException();
+    }
 
-        public CrossIdentityClient(HttpClient httpClient)
-        {
-            this.httpClient = httpClient;
-        }
-
-        public virtual Task<AuthorizationResponse> Authorize(AuthorizationRequest request)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<TokenResponse> RequestToken(TokenRequest request, CancellationToken cancellationToken)
-        {
-            var serialized = JsonHelper.ToKeyValuePairs(request);
-            var body = new FormUrlEncodedContent(serialized);
-            var response = await httpClient.PostAsync(request.EndPoint, body, cancellationToken);
-            response.EnsureSuccessStatusCode();
-            response.EnsureAcceptHeadersMatches();
-            var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponse>();
-            return tokenResponse!;
-        }
+    public async Task<TokenResponse> RequestToken(TokenRequest request, CancellationToken? cancellationToken)
+    {
+        var serialized = JsonHelper.ToKeyValuePairs(request);
+        var body = new FormUrlEncodedContent(serialized);
+        var response = await httpClient.PostAsync(request.EndPoint, body, cancellationToken ?? CancellationToken.None);
+        response.EnsureSuccessStatusCode();
+        response.EnsureAcceptHeadersMatches();
+        var tokenResponse = await response.Content.ReadFromJsonAsync<TokenResponse>();
+        return tokenResponse!;
     }
 }

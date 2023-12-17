@@ -1,28 +1,22 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace AuthClient.Services.Identity.Requests
+namespace AuthClient.Services.Identity.Requests;
+
+public abstract class TokenRequest(
+    string endPoint,
+    string clientId,
+    SupportedGrantType requestedGrantType,
+    string? scope = null) : IdentityRequest(endPoint, clientId, scope)
 {
-    public abstract class TokenRequest : IdentityRequest
+    [JsonPropertyName("grant_type")]
+    public string GrantType => RequestedGrantType switch
     {
-        public TokenRequest(
-            string endPoint,
-            string clientId,
-            SupportedGrantType requestedGrantType,
-            string? scope = null) : base(endPoint, clientId, scope)
-        {
-            RequestedGrantType = requestedGrantType;
-        }
+        SupportedGrantType.AuthorizationCode => "authorization_code",
+        SupportedGrantType.Password => "password",
+        _ => throw new NotSupportedException(nameof(GrantType))
+    };
 
-        [JsonPropertyName("grant_type")]
-        public string GrantType => RequestedGrantType switch
-        {
-            SupportedGrantType.AuthorizationCode => "authorization_code",
-            SupportedGrantType.Password => "password",
-            _ => throw new NotSupportedException(nameof(GrantType))
-        };
-
-        [JsonIgnore]
-        public SupportedGrantType RequestedGrantType { get; }
-    }
+    [JsonIgnore]
+    public SupportedGrantType RequestedGrantType { get; } = requestedGrantType;
 }

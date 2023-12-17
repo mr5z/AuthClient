@@ -1,23 +1,15 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace AuthClient.Services.Identity
+namespace AuthClient.Services.Identity;
+
+public abstract class IdentityRequest(string endPoint, string clientId, string? scope = null)
 {
-    public abstract class IdentityRequest
-    {
-        public IdentityRequest(string endPoint, string clientId, string? scope = null)
-        {
-            EndPoint = endPoint;
-            ClientId = clientId;
-            Scope = scope;
-        }
+    [JsonIgnore]
+    public string EndPoint { get; } = endPoint;
 
-        [JsonIgnore]
-        public string EndPoint { get; }
+    [JsonPropertyName("client_id")]
+    public string ClientId { get; } = clientId;
 
-        [JsonPropertyName("client_id")]
-        public string ClientId { get; }
-
-        [JsonPropertyName("scope")]
-        public string? Scope { get; }
-    }
+    [JsonPropertyName("scope")]
+    public string? Scope { get; } = scope;
 }
