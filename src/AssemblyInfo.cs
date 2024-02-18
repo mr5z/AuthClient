@@ -1,3 +1,3 @@
-﻿namespace System.Runtime.CompilerServices;
+﻿namespace AuthClient;
 
 public class IsExternalInit { }
